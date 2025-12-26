@@ -8,8 +8,8 @@ import java.util.Set;
 public class DependencyGraphBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DependencyGraphBuilder.class);
 
-    public DependencyGraph buildGraph(Set<Class<?>> components) {
-        logger.info("Building dependency graph for {} components", components.size());
+    public DependencyGraph build(Set<Class<?>> components) {
+        logger.debug("Building dependency graph for {} components", components.size());
 
         DependencyGraph dependencyGraph = new DependencyGraph();
 
@@ -26,7 +26,7 @@ public class DependencyGraphBuilder {
             dependencyGraph.getCycles().forEach(cycleVertex ->
                     logger.error("  - {}", cycleVertex.getSimpleName()));
         } else {
-            logger.info("No cyclic dependencies detected");
+            logger.debug("No cyclic dependencies detected");
         }
 
         dependencyGraph.printGraph();

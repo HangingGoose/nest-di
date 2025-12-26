@@ -64,7 +64,7 @@ public class DependencyGraphTest {
         components.add(TestController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.buildGraph(components);
+        DependencyGraph graph = builder.build(components);
 
         assertFalse(graph.hasCycles());
     }
@@ -102,7 +102,7 @@ public class DependencyGraphTest {
         components.add(CycleController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.buildGraph(components);
+        DependencyGraph graph = builder.build(components);
 
         assertTrue(graph.hasCycles());
     }

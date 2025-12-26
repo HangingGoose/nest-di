@@ -4,7 +4,13 @@ import dev.hanginggoose.framework.annotations.Service;
 
 @Service
 public class DemoService {
-    public String getServiceMessage() {
-        return "Service is running!";
+    DemoRepository repository;
+
+    public DemoService(DemoRepository repository) {
+        this.repository = repository;
+    }
+
+    public String process() {
+        return "Processed data: " + repository.getData();
     }
 }

@@ -23,13 +23,17 @@ public class SimpleScannerTest {
 
         assertFalse(components.isEmpty());
 
-        boolean foundDemoComponent = components.stream()
-                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoComponent"));
+        boolean foundDemoRepository = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoRepository"));
         boolean foundDemoService = components.stream()
                 .anyMatch(clazz -> clazz.getSimpleName().equals("DemoService"));
+        boolean foundDemoController = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoController"));
 
-        assertTrue(foundDemoComponent);
+
+        assertTrue(foundDemoRepository);
         assertTrue(foundDemoService);
+        assertTrue(foundDemoController);
     }
 
     @Test
@@ -38,8 +42,8 @@ public class SimpleScannerTest {
         Set<Class<?>> components = scanner.scanPackages(packages);
 
         assertFalse(components.isEmpty());
-        boolean foundDemoComponent = components.stream()
-                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoComponent"));
-        assertTrue(foundDemoComponent);
+        boolean foundDemoRepository = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoRepository"));
+        assertTrue(foundDemoRepository);
     }
 }
