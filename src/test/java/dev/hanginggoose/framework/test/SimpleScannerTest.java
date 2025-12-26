@@ -1,31 +1,45 @@
 package dev.hanginggoose.framework.test;
 
 import dev.hanginggoose.framework.scanning.ComponentScanner;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimpleScannerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleScannerTest.class);
+    private ComponentScanner scanner;
+
+    @BeforeEach
+    public void setup() {
+        scanner = new ComponentScanner();
+    }
 
     @Test
     public void testComponentScannerFindsComponents() {
-        ComponentScanner scanner = new ComponentScanner();
         Set<Class<?>> components = scanner.scan("dev.hanginggoose.demo");
 
         assertFalse(components.isEmpty());
 
-        log.info("Found components:");
-        components.forEach(clazz -> log.info("  - {} ({})", clazz.getSimpleName(), clazz.getName()));
+        boolean foundDemoComponent = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoComponent"));
+        boolean foundDemoService = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoService"));
 
-        boolean foundDemoComponent = components.stream().anyMatch(clazz -> clazz.getSimpleName().equals("DemoComponent"));
+        assertTrue(foundDemoComponent);
+        assertTrue(foundDemoService);
+    }
 
+    @Test
+    public void testScanMultiplePackages() {
+        String[] packages = {"dev.hanginggoose.demo", "dev.hanginggoose.framework"};
+        Set<Class<?>> components = scanner.scanPackages(packages);
+
+        assertFalse(components.isEmpty());
+        boolean foundDemoComponent = components.stream()
+                .anyMatch(clazz -> clazz.getSimpleName().equals("DemoComponent"));
         assertTrue(foundDemoComponent);
     }
 }

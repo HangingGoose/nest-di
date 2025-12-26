@@ -16,6 +16,7 @@ application {
 
 dependencies {
     implementation("org.reflections:reflections:0.10.2")
+    implementation("io.github.classgraph:classgraph:4.8.184")
     implementation("org.jgrapht:jgrapht-core:1.5.2")
 
     implementation("org.slf4j:slf4j-api:2.0.17")
