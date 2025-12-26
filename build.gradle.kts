@@ -19,6 +19,7 @@ dependencies {
     implementation("org.jgrapht:jgrapht-core:1.5.2")
 
     implementation("org.slf4j:slf4j-api:2.0.17")
+    testImplementation("ch.qos.logback:logback-classic:1.5.23")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
