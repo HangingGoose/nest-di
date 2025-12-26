@@ -22,7 +22,7 @@ public class DependencyGraphBuilder {
         }
 
         if (dependencyGraph.hasCycles()) {
-            logger.error("Cyclic dependencies detected in the component graph: ");
+            logger.error("Cyclic dependencies detected in dependency graph: ");
             dependencyGraph.getCycles().forEach(cycleVertex ->
                     logger.error("  - {}", cycleVertex.getSimpleName()));
         } else {

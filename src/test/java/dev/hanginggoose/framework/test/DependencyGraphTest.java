@@ -61,9 +61,9 @@ public class DependencyGraphTest {
         components.add(TestController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components);
 
-        assertFalse(graph.hasCycles());
+        assertFalse(dependencyGraph.hasCycles());
     }
 
     @Component
@@ -99,9 +99,9 @@ public class DependencyGraphTest {
         components.add(CycleController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components);
 
-        assertTrue(graph.hasCycles());
+        assertTrue(dependencyGraph.hasCycles());
     }
 
     @Test
@@ -112,11 +112,11 @@ public class DependencyGraphTest {
         components.add(TestController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components);
 
-        assertFalse(graph.hasCycles());
+        assertFalse(dependencyGraph.hasCycles());
 
-        var order = graph.getTopologicalOrder();
+        var order = dependencyGraph.getTopologicalOrder();
 
         assertEquals(3, order.size());
         assertEquals(TestRepository.class, order.get(0));
