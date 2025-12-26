@@ -109,10 +109,6 @@ public class DIContainer {
         return Collections.unmodifiableMap(instances);
     }
 
-    public boolean containsBean(Class<?> beanClass) {
-        return instances.containsKey(beanClass);
-    }
-
     public void shutdown() {
         logger.info("Shutting down DI Container...");
         instances.clear();
