@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class DependencyGraph {
 
@@ -44,7 +41,7 @@ public class DependencyGraph {
                 Optional<Class<?>> dependency = findComponentByType(dependencyType, allComponents);
 
                 if (dependency.isPresent()) {
-                    addDependency(componentClass, dependency.get());
+                    addDependency(dependency.get(), componentClass);
                 } else {
                     logger.warn("No component found for dependency type: {} in {}",
                             dependencyType.getSimpleName(),
@@ -67,11 +64,50 @@ public class DependencyGraph {
         return cycleDetector.findCycles();
     }
 
+    public List<Class<?>> getTopologicalOrder() {
+        if (hasCycles()) {
+            throw new IllegalStateException("Cannot get topological order: graph contains cycles");
+        }
+
+        Map<Class<?>, Integer> inDegree = new HashMap<>();
+        List<Class<?>> result = new ArrayList<>();
+
+        for (Class<?> vertex : graph.vertexSet()) {
+            inDegree.put(vertex, graph.inDegreeOf(vertex));
+        }
+
+        Queue<Class<?>> queue = new LinkedList<>();
+        for (Class<?> vertex : graph.vertexSet()) {
+            if (inDegree.get(vertex) == 0) {
+                queue.add(vertex);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            Class<?> current = queue.poll();
+            result.add(current);
+
+            for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
+                Class<?> neighbor = graph.getEdgeTarget(edge);
+                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                if (inDegree.get(neighbor) == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        if (result.size() != graph.vertexSet().size()) {
+            throw new IllegalStateException("Unexpected error: topological sort incomplete (possible undetected cycle)");
+        }
+
+        return result;
+    }
+
     public boolean hasCycles() {
         return cycleDetector.detectCycles();
     }
 
-    private Constructor<?> findConstructor(Constructor<?>[] constructors) {
+    public Constructor<?> findConstructor(Constructor<?>[] constructors) {
         if (constructors.length == 1) {
             return constructors[0];
         }
@@ -87,7 +123,7 @@ public class DependencyGraph {
                 .orElse(null);
     }
 
-    private Optional<Class<?>> findComponentByType(Class<?> type, Set<Class<?>> allComponents) {
+    public Optional<Class<?>> findComponentByType(Class<?> type, Set<Class<?>> allComponents) {
         return allComponents.stream()
                 .filter(type::isAssignableFrom)
                 .findFirst();

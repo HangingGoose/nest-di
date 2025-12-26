@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DependencyGraphTest {
 
@@ -20,7 +19,6 @@ public class DependencyGraphTest {
         @Service
         class ServiceA {
         }
-
         @Service
         class ServiceB {
         }
@@ -38,26 +36,25 @@ public class DependencyGraphTest {
     }
 
     @Component
-    class TestRepository {
+    static class TestRepository {
         public TestRepository() {
         }
     }
 
     @Service
-    class TestService {
+    static class TestService {
         public TestService(TestRepository repository) {
         }
     }
 
     @Controller
-    class TestController {
+    static class TestController {
         public TestController(TestService service) {
         }
     }
 
     @Test
     public void testDependencyGraphBuilderWithRealComponents() {
-
         Set<Class<?>> components = new HashSet<>();
         components.add(TestRepository.class);
         components.add(TestService.class);
@@ -105,5 +102,25 @@ public class DependencyGraphTest {
         DependencyGraph graph = builder.build(components);
 
         assertTrue(graph.hasCycles());
+    }
+
+    @Test
+    public void testDependencyGraphBuilderTopologicalOrder() {
+        Set<Class<?>> components = new HashSet<>();
+        components.add(TestRepository.class);
+        components.add(TestService.class);
+        components.add(TestController.class);
+
+        DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        DependencyGraph graph = builder.build(components);
+
+        assertFalse(graph.hasCycles());
+
+        var order = graph.getTopologicalOrder();
+
+        assertEquals(3, order.size());
+        assertEquals(TestRepository.class, order.get(0));
+        assertEquals(TestService.class, order.get(1));
+        assertEquals(TestController.class, order.get(2));
     }
 }
