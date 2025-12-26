@@ -11,6 +11,6 @@ public class DemoController {
     }
 
     public String handleRequest() {
-        return "Response: " + service.process();
+        return "Controller: " + service.process();
     }
 }

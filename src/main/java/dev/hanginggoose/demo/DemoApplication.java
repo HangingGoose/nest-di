@@ -1,7 +1,8 @@
 package dev.hanginggoose.demo;
 
-import dev.hanginggoose.framework.graph.DependencyGraphBuilder;
-import dev.hanginggoose.framework.scanning.ComponentScanner;
+import dev.hanginggoose.demo.components.DemoController;
+import dev.hanginggoose.framework.core.DIContainer;
+import dev.hanginggoose.framework.core.DIContainerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,12 +12,26 @@ public class DemoApplication {
     public static void main(String[] args) {
         logger.info("Starting DI Container Demo");
 
-        ComponentScanner scanner = new ComponentScanner();
-        var components = scanner.scan("dev.hanginggoose.demo");
+        try {
+            DIContainer container = DIContainerFactory.create("dev.hanginggoose.demo");
 
-        DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        var graph = builder.build(components);
+            container.start();
 
-        logger.info("Dependency graph constructed successfully");
+            DemoController controller = container.getBean(DemoController.class);
+            String response = controller.handleRequest();
+
+            logger.info("Response: {}", response);
+
+            logger.info("Managed beans:");
+            container.getAllBeans().forEach((clazz, instance) ->
+                    logger.info("  - {}: {}", clazz.getSimpleName(), instance)
+            );
+
+            container.shutdown();
+        } catch (Exception e) {
+            logger.error("Error in demo application", e);
+        }
+
+        logger.info("Demo finished");
     }
 }
