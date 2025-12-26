@@ -8,4 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD})
 public @interface Autowired {
+    boolean required() default true;
 }
