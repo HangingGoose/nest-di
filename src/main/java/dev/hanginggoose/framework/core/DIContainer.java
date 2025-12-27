@@ -7,18 +7,25 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DIContainer {
     private static final Logger logger = LoggerFactory.getLogger(DIContainer.class);
 
-    private final Map<Class<?>, Object> instances = new HashMap<>();
+    private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
+    private final Map<String, Object> namedBeans = new ConcurrentHashMap<>();
+    private final Map<Class<?>, BeanInfo> beanInfos = new ConcurrentHashMap<>();
     private final DependencyGraph dependencyGraph;
+    private final List<BeanInfo> configurationBeans;
 
-    public DIContainer(DependencyGraph dependencyGraph) {
+    public DIContainer(DependencyGraph dependencyGraph, List<BeanInfo> configurationBeans) {
         this.dependencyGraph = dependencyGraph;
-        logger.info("DI Container initialized");
+        this.configurationBeans = configurationBeans != null ? configurationBeans : new ArrayList<>();
+        logger.info("DI Container initialized with {} configuration beans",
+                this.configurationBeans.size());
     }
 
     public void start() {
@@ -30,6 +37,11 @@ public class DIContainer {
 
         List<Class<?>> instantiationOrder = dependencyGraph.getTopologicalOrder();
 
+        for (BeanInfo beanInfo : configurationBeans) {
+            beanInfos.put(beanInfo.getBeanClass(), beanInfo);
+            logger.debug("Registered BeanInfo for: {}", beanInfo.getBeanClass().getSimpleName());
+        }
+
         for (Class<?> componentClass : instantiationOrder) {
             getBean(componentClass);
         }
@@ -40,16 +52,87 @@ public class DIContainer {
     public <T> T getBean(Class<T> beanClass) {
         logger.debug("Requesting bean {}", beanClass.getSimpleName());
 
-        if (instances.containsKey(beanClass)) {
+        Object existingInstance = instances.get(beanClass);
+        if (existingInstance != null) {
             logger.debug("Returning cached instance of {}", beanClass.getSimpleName());
-            return (T) instances.get(beanClass);
+            return (T) existingInstance;
         }
 
-        T instance = createInstance(beanClass);
-        instances.put(beanClass, instance);
+        if (beanInfos.containsKey(beanClass)) {
+            return createBeanFromMethod(beanClass);
+        }
+
+        Object instance = instances.computeIfAbsent(beanClass,
+                key -> createInstance((Class<?>) key));
 
         logger.debug("Created new instance of {}", beanClass.getSimpleName());
-        return instance;
+        return (T) instance;
+    }
+
+    public Object getBean(String beanName) {
+        logger.debug("Requesting bean by name: {}", beanName);
+
+        if (namedBeans.containsKey(beanName)) {
+            logger.debug("Returning cached instance of bean named {}", beanName);
+            return namedBeans.get(beanName);
+        }
+
+        return beanInfos.values().stream()
+                .filter(beanInfo -> beanInfo.getName().equals(beanName))
+                .findFirst()
+                .map(beanInfo -> getBean(beanInfo.getBeanClass()))
+                .orElseThrow(() -> new NoSuchElementException("No bean found with name: " + beanName));
+    }
+
+    private <T> T createBeanFromMethod(Class<T> beanClass) {
+        BeanInfo beanInfo = beanInfos.get(beanClass);
+        if (beanInfo == null) {
+            throw new IllegalArgumentException("No BeanInfo found for: " + beanClass.getName());
+        }
+
+        logger.debug("Creating bean {} using factory method {}", beanClass.getSimpleName(),
+                beanInfo.getFactoryMethod().getName());
+
+        try {
+            Method factoryMethod = beanInfo.getFactoryMethod();
+            Object configInstance = beanInfo.getConfigInstance();
+
+            if (configInstance == null) {
+                throw new IllegalStateException("No configuration instance available for factory method " +
+                        factoryMethod.getName() + " of bean " + beanClass.getName());
+            }
+
+            Parameter[] parameters = factoryMethod.getParameters();
+            Object[] parameterValues = new Object[parameters.length];
+
+            for (int i = 0; i < parameters.length; i++) {
+                Parameter parameter = parameters[i];
+                Class<?> parameterType = parameter.getType();
+
+                parameterValues[i] = getBean(parameterType);
+                logger.debug("  Injected {} into factory method {}",
+                        parameterType.getSimpleName(), factoryMethod.getName());
+            }
+
+            factoryMethod.setAccessible(true);
+            T instance = (T) factoryMethod.invoke(configInstance, parameterValues);
+
+            if (instance == null) {
+                throw new IllegalStateException("Factory method " + factoryMethod.getName() +
+                        " returned null for bean " + beanClass.getName());
+            }
+
+            instances.put(beanClass, instance);
+            namedBeans.put(beanInfo.getName(), instance);
+
+            logger.info("Successfully created bean {} using factory method {}",
+                    beanClass.getSimpleName(), factoryMethod.getName());
+
+            return instance;
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Failed to create bean " + beanClass.getName() +
+                    " using factory method " + beanInfo.getFactoryMethod().getName(), e);
+        }
     }
 
     private <T> T createInstance(Class<T> componentClass) {
@@ -109,9 +192,19 @@ public class DIContainer {
         return Collections.unmodifiableMap(instances);
     }
 
+    public Map<String, Object> getNamedBeans() {
+        return Collections.unmodifiableMap(namedBeans);
+    }
+
+    public Set<String> getBeanNames() {
+        return Collections.unmodifiableSet(namedBeans.keySet());
+    }
+
     public void shutdown() {
         logger.info("Shutting down DI Container...");
         instances.clear();
+        namedBeans.clear();
+        beanInfos.clear();
         logger.info("DI Container shut down");
     }
 }

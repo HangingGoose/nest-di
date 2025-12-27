@@ -19,12 +19,12 @@ public class DIContainerFactory {
 
         ConfigurationScanner configScanner = new ConfigurationScanner();
         Map<Class<?>, List<BeanInfo>> beanMethods = configScanner.scanAllBeanMethods(basePackage);
-        beanMethods.values().stream()
+        var beanInfos = beanMethods.values().stream()
                 .flatMap(List::stream)
-                .forEach(beanInfo -> components.add(beanInfo.getBeanClass()));
+                .toList();
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        var dependencyGraph = builder.build(components);
+        var dependencyGraph = builder.build(components, beanInfos);
 
         Map<Class<?>, Object> configInstances = instantiateConfigurations(beanMethods.keySet());
         List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(beanMethods, configInstances);

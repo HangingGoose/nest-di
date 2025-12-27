@@ -58,9 +58,9 @@ public class DiContainerTest {
         components.add(MoreDependentComponent.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components, null);
 
-        container = new DIContainer(dependencyGraph);
+        container = new DIContainer(dependencyGraph, null);
     }
 
     @Test
@@ -124,9 +124,9 @@ public class DiContainerTest {
         Set<Class<?>> components = Set.of(OptionalComponent.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.build(components);
+        DependencyGraph graph = builder.build(components, null);
 
-        DIContainer testContainer = new DIContainer(graph);
+        DIContainer testContainer = new DIContainer(graph, null);
         testContainer.start();
 
         OptionalComponent optionalComponent = testContainer.getBean(OptionalComponent.class);

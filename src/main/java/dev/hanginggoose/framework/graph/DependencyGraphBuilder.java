@@ -1,14 +1,16 @@
 package dev.hanginggoose.framework.graph;
 
+import dev.hanginggoose.framework.core.BeanInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Set;
 
 public class DependencyGraphBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DependencyGraphBuilder.class);
 
-    public DependencyGraph build(Set<Class<?>> components) {
+    public DependencyGraph build(Set<Class<?>> components, List<BeanInfo> beanInfos) {
         logger.debug("Building dependency graph for {} components", components.size());
 
         DependencyGraph dependencyGraph = new DependencyGraph();
