@@ -60,7 +60,7 @@ public class DIContainerFactory {
         return new DIContainer(dependencyGraph, completeBeanInfos);
     }
 
-    private static Map<Class<?>, Object> instantiateConfigurations(Set<Class<?>> configClasses) {
+    public static Map<Class<?>, Object> instantiateConfigurations(Set<Class<?>> configClasses) {
         Map<Class<?>, Object> configInstances = new HashMap<>();
 
         for (Class<?> configClass : configClasses) {
@@ -76,7 +76,7 @@ public class DIContainerFactory {
         return configInstances;
     }
 
-    private static List<BeanInfo> createCompleteBeanInfos(
+    public static List<BeanInfo> createCompleteBeanInfos(
             Map<Class<?>, List<BeanInfo>> beanMethods,
             Map<Class<?>, Object> configInstances) {
         List<BeanInfo> completeBeanInfos = new ArrayList<>();
