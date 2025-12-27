@@ -1,5 +1,6 @@
 package dev.hanginggoose.demo;
 
+import dev.hanginggoose.demo.components.BeanUser;
 import dev.hanginggoose.demo.components.DemoController;
 import dev.hanginggoose.framework.core.DIContainer;
 import dev.hanginggoose.framework.core.DIContainerFactory;
@@ -19,12 +20,25 @@ public class DemoApplication {
 
             DemoController controller = container.getBean(DemoController.class);
             String response = controller.handleRequest();
+            logger.info("Controller response: {}", response);
 
-            logger.info("Response: {}", response);
+            String greeting = (String) container.getBean("customGreeting");
+            logger.info("Custom greeting bean: {}", greeting);
 
-            logger.info("Managed beans:");
+            Integer answer = container.getBean(Integer.class);
+            logger.info("Custom answer bean: {}", answer);
+
+            BeanUser beanUser = container.getBean(BeanUser.class);
+            logger.info("BeanUser says: {}", beanUser.useBeans());
+
+            logger.info("Managed beans ({}):", container.getAllBeans().size());
             container.getAllBeans().forEach((clazz, instance) ->
                     logger.info("  - {}: {}", clazz.getSimpleName(), instance)
+            );
+
+            logger.info("Named beans ({}):", container.getBeanNames().size());
+            container.getBeanNames().forEach(name ->
+                    logger.info("  - {}: {}", name, container.getBean(name))
             );
 
             container.shutdown();
