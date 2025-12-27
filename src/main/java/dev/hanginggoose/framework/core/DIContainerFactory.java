@@ -38,10 +38,24 @@ public class DIContainerFactory {
         ComponentScanner scanner = new ComponentScanner();
         var components = scanner.scanPackages(basePackages);
 
+        ConfigurationScanner configScanner = new ConfigurationScanner();
+        Map<Class<?>, List<BeanInfo>> beanMethods = new HashMap<>();
+        for (String pkg : basePackages) {
+            Map<Class<?>, List<BeanInfo>> packageBeans = configScanner.scanAllBeanMethods(pkg);
+            beanMethods.putAll(packageBeans);
+        }
+
+        beanMethods.values().stream()
+                .flatMap(List::stream)
+                .forEach(beanInfo -> components.add(beanInfo.getBeanClass()));
+
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
         var dependencyGraph = builder.build(components);
 
-        return new DIContainer(dependencyGraph);
+        Map<Class<?>, Object> configInstances = instantiateConfigurations(beanMethods.keySet());
+        List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(beanMethods, configInstances);
+
+        return new DIContainer(dependencyGraph, completeBeanInfos);
     }
 
     private static Map<Class<?>, Object> instantiateConfigurations(Set<Class<?>> configClasses) {
