@@ -7,6 +7,7 @@ import dev.hanginggoose.framework.graph.DependencyGraph;
 import dev.hanginggoose.framework.graph.DependencyGraphBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class DependencyGraphTest {
         components.add(TestController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components, new ArrayList<>());
 
         assertFalse(dependencyGraph.hasCycles());
     }
@@ -99,7 +100,7 @@ public class DependencyGraphTest {
         components.add(CycleController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components, new ArrayList<>());
 
         assertTrue(dependencyGraph.hasCycles());
     }
@@ -112,7 +113,7 @@ public class DependencyGraphTest {
         components.add(TestController.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components);
+        DependencyGraph dependencyGraph = builder.build(components, new ArrayList<>());
 
         assertFalse(dependencyGraph.hasCycles());
 

@@ -1,6 +1,7 @@
 package dev.hanginggoose.framework.graph;
 
 import dev.hanginggoose.framework.annotations.Autowired;
+import dev.hanginggoose.framework.core.BeanInfo;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
@@ -35,18 +37,30 @@ public class DependencyGraph {
 
         if (chosenConstructor != null) {
             Parameter[] parameters = chosenConstructor.getParameters();
-            for (Parameter parameter : parameters) {
-                Class<?> dependencyType = parameter.getType();
+            analyzeParameters(componentClass, componentClass.getSimpleName(), parameters, allComponents);
+        }
+    }
 
-                Optional<Class<?>> dependency = findComponentByType(dependencyType, allComponents);
+    public void analyzeBeanDependencies(BeanInfo beanInfo, Set<Class<?>> allComponents) {
+        Method beanMethod = beanInfo.getFactoryMethod();
+        if (beanMethod != null) {
+            Parameter[] parameters = beanMethod.getParameters();
+            analyzeParameters(beanInfo.getBeanClass(), beanMethod.getName(), parameters, allComponents);
+        }
+    }
 
-                if (dependency.isPresent()) {
-                    addDependency(dependency.get(), componentClass);
-                } else {
-                    logger.warn("No component found for dependency type: {} in {}",
-                            dependencyType.getSimpleName(),
-                            componentClass.getSimpleName());
-                }
+    private void analyzeParameters(Class<?> className, String source, Parameter[] parameters, Set<Class<?>> allComponents) {
+        for (Parameter parameter : parameters) {
+            Class<?> parameterType = parameter.getType();
+
+            Optional<Class<?>> dependency = findComponentByType(parameterType, allComponents);
+
+            if (dependency.isPresent()) {
+                addDependency(dependency.get(), className);
+            } else {
+                logger.warn("No component found for dependency type: {} in bean method {}",
+                        parameterType.getSimpleName(),
+                        source);
             }
         }
     }

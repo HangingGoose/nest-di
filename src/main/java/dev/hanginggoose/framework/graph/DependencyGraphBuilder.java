@@ -1,5 +1,6 @@
 package dev.hanginggoose.framework.graph;
 
+import dev.hanginggoose.framework.annotations.Configuration;
 import dev.hanginggoose.framework.core.BeanInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,8 @@ public class DependencyGraphBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DependencyGraphBuilder.class);
 
     public DependencyGraph build(Set<Class<?>> components, List<BeanInfo> beanInfos) {
-        logger.debug("Building dependency graph for {} components", components.size());
+        logger.debug("Building dependency graph for {} components and {} beans",
+                components.size(), beanInfos.size());
 
         DependencyGraph dependencyGraph = new DependencyGraph();
 
@@ -19,8 +21,18 @@ public class DependencyGraphBuilder {
             dependencyGraph.addComponent(component);
         }
 
+        for (BeanInfo beanInfo : beanInfos) {
+            dependencyGraph.addComponent(beanInfo.getBeanClass());
+        }
+
         for (Class<?> component : components) {
-            dependencyGraph.analyzeDependencies(component, components);
+            if (!component.isAnnotationPresent(Configuration.class)) {
+                dependencyGraph.analyzeDependencies(component, components);
+            }
+        }
+
+        for (BeanInfo beanInfo : beanInfos) {
+            dependencyGraph.analyzeBeanDependencies(beanInfo, components);
         }
 
         if (dependencyGraph.hasCycles()) {

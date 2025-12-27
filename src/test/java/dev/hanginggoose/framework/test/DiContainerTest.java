@@ -8,6 +8,7 @@ import dev.hanginggoose.framework.graph.DependencyGraphBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public class DiContainerTest {
         components.add(MoreDependentComponent.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components, null);
+        DependencyGraph dependencyGraph = builder.build(components, new ArrayList<>());
 
         container = new DIContainer(dependencyGraph, null);
     }
@@ -124,7 +125,7 @@ public class DiContainerTest {
         Set<Class<?>> components = Set.of(OptionalComponent.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph graph = builder.build(components, null);
+        DependencyGraph graph = builder.build(components, new ArrayList<>());
 
         DIContainer testContainer = new DIContainer(graph, null);
         testContainer.start();

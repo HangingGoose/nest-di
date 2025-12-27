@@ -14,20 +14,21 @@ public class DIContainerFactory {
     public static DIContainer create(String basePackage) {
         logger.info("Creating DI Container for package: {}", basePackage);
 
-        ComponentScanner scanner = new ComponentScanner();
-        var components = scanner.scan(basePackage);
+        ComponentScanner componentScanner = new ComponentScanner();
+        var components = componentScanner.scan(basePackage);
 
         ConfigurationScanner configScanner = new ConfigurationScanner();
         Map<Class<?>, List<BeanInfo>> beanMethods = configScanner.scanAllBeanMethods(basePackage);
-        var beanInfos = beanMethods.values().stream()
-                .flatMap(List::stream)
-                .toList();
-
-        DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        var dependencyGraph = builder.build(components, beanInfos);
 
         Map<Class<?>, Object> configInstances = instantiateConfigurations(beanMethods.keySet());
         List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(beanMethods, configInstances);
+
+        for (BeanInfo beanInfo : completeBeanInfos) {
+            components.add(beanInfo.getBeanClass());
+        }
+
+        DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        var dependencyGraph = builder.build(components, completeBeanInfos);
 
         return new DIContainer(dependencyGraph, completeBeanInfos);
     }
@@ -35,25 +36,26 @@ public class DIContainerFactory {
     public static DIContainer create(String[] basePackages) {
         logger.info("Creating DI Container for packages: {}", Arrays.toString(basePackages));
 
-        ComponentScanner scanner = new ComponentScanner();
-        var components = scanner.scanPackages(basePackages);
+        ComponentScanner componentScanner = new ComponentScanner();
+        Set<Class<?>> allComponents = new HashSet<>();
 
         ConfigurationScanner configScanner = new ConfigurationScanner();
-        Map<Class<?>, List<BeanInfo>> beanMethods = new HashMap<>();
+        Map<Class<?>, List<BeanInfo>> allBeanMethods = new HashMap<>();
+
         for (String pkg : basePackages) {
-            Map<Class<?>, List<BeanInfo>> packageBeans = configScanner.scanAllBeanMethods(pkg);
-            beanMethods.putAll(packageBeans);
+            allComponents.addAll(componentScanner.scan(pkg));
+            allBeanMethods.putAll(configScanner.scanAllBeanMethods(pkg));
         }
 
-        beanMethods.values().stream()
-                .flatMap(List::stream)
-                .forEach(beanInfo -> components.add(beanInfo.getBeanClass()));
+        Map<Class<?>, Object> configInstances = instantiateConfigurations(allBeanMethods.keySet());
+        List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(allBeanMethods, configInstances);
+
+        for (BeanInfo beanInfo : completeBeanInfos) {
+            allComponents.add(beanInfo.getBeanClass());
+        }
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        var dependencyGraph = builder.build(components);
-
-        Map<Class<?>, Object> configInstances = instantiateConfigurations(beanMethods.keySet());
-        List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(beanMethods, configInstances);
+        var dependencyGraph = builder.build(allComponents, completeBeanInfos);
 
         return new DIContainer(dependencyGraph, completeBeanInfos);
     }
