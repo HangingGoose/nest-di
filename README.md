@@ -1,9 +1,10 @@
-# Matti Lehtinen - JVM Framework
+# Nest DI – README
+> Lightweight, annotation-based Dependency-Injection framework for Java – made as a project for **Programmeren 3 (2025-2026)**.
+> Inspired by Spring Framework
+---
 
-### Annotations Implemented:
-- `@Component` - Marks class as a component
-- `@Service` - Specific `@Component` for service layer
-- `@Controller` - Specific `@Component` for controllers
-- `@Configuration` - Specific `@Component` for config classes
-- `@Autowired` - Marks constructor/field/method for DI
-- `@Bean` - Marks method as a bean producer
+## Auteur
+**Name:** Matti Lehtinen (HangingGoose)
+**Project:** Nest DI (v1.0.0)
+
+---
