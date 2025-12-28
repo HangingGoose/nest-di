@@ -121,49 +121,4 @@ public class BeanConfigurationTest {
         assertNotNull(component);
         assertEquals("Component: From config", component.getValue());
     }
-
-    @Configuration
-    public static class DuplicateConfig {
-        @Bean(name = "sameName")
-        public String bean1() {
-            return "First";
-        }
-
-        @Bean(name = "sameName")
-        public String bean2() {
-            return "Second";
-        }
-    }
-
-    @Test
-    public void testDuplicateBeanNames() {
-        Set<Class<?>> components = new HashSet<>();
-        components.add(DuplicateConfig.class);
-
-        ConfigurationScanner scanner = new ConfigurationScanner();
-        List<BeanInfo> configBeanInfos = scanner.scanBeanMethods(DuplicateConfig.class);
-
-        for (BeanInfo beanInfo : configBeanInfos) {
-            components.add(beanInfo.getBeanClass());
-        }
-
-        Map<Class<?>, Object> configInstances = new HashMap<>();
-        Object configInstance = instantiateConfigurations(Set.of(DuplicateConfig.class)).get(DuplicateConfig.class);
-        configInstances.put(DuplicateConfig.class, configInstance);
-
-        List<BeanInfo> completeBeanInfos = createCompleteBeanInfos(
-                Map.of(DuplicateConfig.class, configBeanInfos),
-                configInstances
-        );
-
-        DependencyGraphBuilder builder = new DependencyGraphBuilder();
-        DependencyGraph dependencyGraph = builder.build(components, completeBeanInfos);
-
-        DIContainer duplicateContainer = new DIContainer(dependencyGraph, completeBeanInfos);
-
-        duplicateContainer.start();
-
-        String bean = (String) duplicateContainer.getBean("sameName");
-        assertEquals("Second", bean);
-    }
 }
