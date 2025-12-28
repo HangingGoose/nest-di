@@ -1,9 +1,6 @@
 package dev.hanginggoose.framework.scanning;
 
-import dev.hanginggoose.framework.annotations.Component;
-import dev.hanginggoose.framework.annotations.Configuration;
-import dev.hanginggoose.framework.annotations.Controller;
-import dev.hanginggoose.framework.annotations.Service;
+import dev.hanginggoose.framework.annotations.*;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +31,7 @@ public class ComponentScanner {
 
         Set<Class<?>> components = new HashSet<>();
         components.addAll(reflections.get(SubTypes.of(TypesAnnotated.with(Component.class)).asClass()));
+        components.addAll(reflections.get(SubTypes.of(TypesAnnotated.with(Repository.class)).asClass()));
         components.addAll(reflections.get(SubTypes.of(TypesAnnotated.with(Service.class)).asClass()));
         components.addAll(reflections.get(SubTypes.of(TypesAnnotated.with(Controller.class)).asClass()));
         components.addAll(reflections.get(SubTypes.of(TypesAnnotated.with(Configuration.class)).asClass()));
@@ -68,6 +66,7 @@ public class ComponentScanner {
     private String getComponentAnnotationType(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Controller.class)) return "@Controller";
         if (clazz.isAnnotationPresent(Service.class)) return "@Service";
+        if (clazz.isAnnotationPresent(Repository.class)) return "@Repository";
         if (clazz.isAnnotationPresent(Configuration.class)) return "@Configuration";
         if (clazz.isAnnotationPresent(Component.class)) return "@Component";
         return "Unknown";

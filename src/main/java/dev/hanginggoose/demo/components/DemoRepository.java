@@ -1,8 +1,8 @@
 package dev.hanginggoose.demo.components;
 
-import dev.hanginggoose.framework.annotations.Component;
+import dev.hanginggoose.framework.annotations.Repository;
 
-@Component
+@Repository
 public class DemoRepository {
     public DemoRepository() {
     }

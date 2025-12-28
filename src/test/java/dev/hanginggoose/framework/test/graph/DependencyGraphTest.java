@@ -2,6 +2,7 @@ package dev.hanginggoose.framework.test.graph;
 
 import dev.hanginggoose.framework.annotations.Component;
 import dev.hanginggoose.framework.annotations.Controller;
+import dev.hanginggoose.framework.annotations.Repository;
 import dev.hanginggoose.framework.annotations.Service;
 import dev.hanginggoose.framework.graph.DependencyGraph;
 import dev.hanginggoose.framework.graph.DependencyGraphBuilder;
@@ -36,7 +37,7 @@ public class DependencyGraphTest {
         assertTrue(dependencyGraph.hasCycles());
     }
 
-    @Component
+    @Repository
     static class TestRepository {
         public TestRepository() {
         }
@@ -67,7 +68,7 @@ public class DependencyGraphTest {
         assertFalse(dependencyGraph.hasCycles());
     }
 
-    @Component
+    @Repository
     static class CycleRepository {
         public CycleRepository() {
         }
