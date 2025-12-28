@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="dev.hanginggoose.framework" level="WARN" />
+    <logger name="dev.hanginggoose.framework" level="INFO" />
     <logger name="dev.hanginggoose.demo" level="INFO" />
 
     <root level="INFO">

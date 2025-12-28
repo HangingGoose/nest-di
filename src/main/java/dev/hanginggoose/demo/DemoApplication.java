@@ -1,7 +1,7 @@
 package dev.hanginggoose.demo;
 
 import dev.hanginggoose.demo.components.BeanUser;
-import dev.hanginggoose.demo.components.DemoController;
+import dev.hanginggoose.framework.core.ControllerDispatcher;
 import dev.hanginggoose.framework.core.DIContainer;
 import dev.hanginggoose.framework.core.DIContainerFactory;
 import org.slf4j.Logger;
@@ -15,12 +15,14 @@ public class DemoApplication {
 
         try {
             DIContainer container = DIContainerFactory.create("dev.hanginggoose.demo");
-
             container.start();
 
-            DemoController controller = container.getBean(DemoController.class);
-            String response = controller.handleRequest();
-            logger.info("Controller response: {}", response);
+            container.getAllBeans().forEach((clazz, instance) ->
+                    logger.debug("Bean: {} -> {}", clazz.getSimpleName(), instance)
+            );
+
+            ControllerDispatcher dispatcher = new ControllerDispatcher(container);
+            dispatcher.startConsole();
 
             String greeting = (String) container.getBean("customGreeting");
             logger.info("Custom greeting bean: {}", greeting);
@@ -32,14 +34,6 @@ public class DemoApplication {
             logger.info("BeanUser says: {}", beanUser.useBeans());
 
             logger.info("Managed beans ({}):", container.getAllBeans().size());
-            container.getAllBeans().forEach((clazz, instance) ->
-                    logger.info("  - {}: {}", clazz.getSimpleName(), instance)
-            );
-
-            logger.info("Named beans ({}):", container.getBeanNames().size());
-            container.getBeanNames().forEach(name ->
-                    logger.info("  - {}: {}", name, container.getBean(name))
-            );
 
             container.shutdown();
         } catch (Exception e) {

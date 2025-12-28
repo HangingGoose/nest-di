@@ -23,14 +23,18 @@ public class ControllerDispatcher {
     private void discoverControllers() {
         container.getBeansWithAnnotation(Controller.class)
                 .forEach(this::registerControllerMethods);
+
+        logger.info("Total commands registered: {}", commands.size());
     }
 
     private void registerControllerMethods(Class<?> controllerClass, Object instance) {
+        logger.debug("Discovering methods in controller: {}", controllerClass.getSimpleName());
+
         for (Method method : controllerClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(InputMapping.class)) {
                 InputMapping mapping = method.getAnnotation(InputMapping.class);
                 String command = mapping.value().isEmpty() ? method.getName() : mapping.value();
-                commands.put(command.toLowerCase(), method);
+                commands.put(command.trim().toLowerCase(), method);
                 logger.debug("Registered command '{}' to method '{}.{}'",
                         command, controllerClass.getSimpleName(), method.getName());
             }
@@ -40,9 +44,15 @@ public class ControllerDispatcher {
     public void startConsole() {
         Scanner scanner = new Scanner(System.in);
         logger.info("Console dispatcher started. Type 'exit' to quit.");
+        logger.info("Available commands: {}", String.join(", ", commands.keySet()));
 
         while (true) {
+            System.out.print("> ");
             String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.isEmpty()) {
+                continue;
+            }
 
             if ("exit".equals(input)) {
                 logger.info("Exiting console dispatcher.");
