@@ -20,16 +20,24 @@ public class ProductController {
     }
 
     @InputMapping
-    public Product addProduct(Product product) {
+    public Product addProduct(String name, double price, String brandId) {
+        Product product = new Product(
+                UUID.randomUUID(),
+                name,
+                price,
+                UUID.fromString(brandId)
+        );
         return service.AddProduct(product);
     }
 
-    public Product getProduct(UUID id) {
-        return service.getProduct(id);
+    public Product getProduct(String id) {
+        return service.getProduct(UUID.fromString(id));
     }
 
-    @InputMapping
-    public Collection<Product> getProductsByBrand(UUID brandId) {
-        return service.getProductsByBrand(brandId);
+    @InputMapping("brandProducts")
+    @Logged
+    @Timed
+    public Collection<Product> getProductsByBrand(String brandId) {
+        return service.getProductsByBrand(UUID.fromString(brandId));
     }
 }

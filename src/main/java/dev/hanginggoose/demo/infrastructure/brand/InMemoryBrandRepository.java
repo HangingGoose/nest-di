@@ -18,7 +18,8 @@ public class InMemoryBrandRepository implements BrandRepository {
 
     @Override
     public Brand createBrand(Brand brand) {
-        return brands.put(brand.id(), brand);
+        brands.put(brand.id(), brand);
+        return brand;
     }
 
     @Override
