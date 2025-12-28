@@ -1,4 +1,4 @@
-package dev.hanginggoose.framework.test;
+package dev.hanginggoose.framework.test.core;
 
 import dev.hanginggoose.framework.annotations.Autowired;
 import dev.hanginggoose.framework.annotations.Component;

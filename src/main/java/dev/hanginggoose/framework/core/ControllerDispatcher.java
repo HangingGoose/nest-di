@@ -77,4 +77,8 @@ public class ControllerDispatcher {
 
         scanner.close();
     }
+
+    public Map<String, Method> getRegisteredCommands() {
+        return commands;
+    }
 }

@@ -1,4 +1,4 @@
-package dev.hanginggoose.framework.test;
+package dev.hanginggoose.framework.test.scanning;
 
 import dev.hanginggoose.framework.scanning.ComponentScanner;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class ComponentScannerTest {
 
     @Test
     public void testScanMultiplePackages() {
-        String[] packages = {"dev.hanginggoose.demo", "dev.hanginggoose.framework"};
+        String[] packages = {"dev.hanginggoose.demo", "dev.hanginggoose.framework.test.core"};
         Set<Class<?>> components = scanner.scanPackages(packages);
 
         assertFalse(components.isEmpty());

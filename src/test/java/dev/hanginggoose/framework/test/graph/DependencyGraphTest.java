@@ -1,4 +1,4 @@
-package dev.hanginggoose.framework.test;
+package dev.hanginggoose.framework.test.graph;
 
 import dev.hanginggoose.framework.annotations.Component;
 import dev.hanginggoose.framework.annotations.Controller;
