@@ -107,21 +107,22 @@ public class DiContainerTest {
         assertThrows(IllegalStateException.class, () -> container.getBean(NonBeanComponent.class));
     }
 
+    @Component
+    static class OptionalComponent {
+        private final String optional;
+
+        @Autowired(required = false)
+        public OptionalComponent(String optional) {
+            this.optional = optional;
+        }
+
+        public String getValue() {
+            return optional == null ? "default" : optional;
+        }
+    }
+
     @Test
     public void testOptionalAutowiredWhenNoAvailableBean() {
-        @Component
-        class OptionalComponent {
-            private final String optional;
-
-            @Autowired(required = false)
-            public OptionalComponent(String optional) {
-                this.optional = optional;
-            }
-
-            public String getValue() {
-                return optional == null ? "default" : optional;
-            }
-        }
         Set<Class<?>> components = Set.of(OptionalComponent.class);
 
         DependencyGraphBuilder builder = new DependencyGraphBuilder();
