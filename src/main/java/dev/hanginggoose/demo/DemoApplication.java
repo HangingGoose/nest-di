@@ -1,6 +1,7 @@
 package dev.hanginggoose.demo;
 
 import dev.hanginggoose.demo.components.BeanUser;
+import dev.hanginggoose.demo.components.InterceptedController;
 import dev.hanginggoose.framework.core.ControllerDispatcher;
 import dev.hanginggoose.framework.core.DIContainer;
 import dev.hanginggoose.framework.core.DIContainerFactory;
@@ -32,6 +33,11 @@ public class DemoApplication {
 
             BeanUser beanUser = container.getBean(BeanUser.class);
             logger.info("BeanUser says: {}", beanUser.useBeans());
+
+            InterceptedController interceptedController = container.getBean(InterceptedController.class);
+            logger.info("InterceptedController result: {}",
+                    interceptedController.interceptedMethod()
+            );
 
             logger.info("Managed beans ({}):", container.getAllBeans().size());
 

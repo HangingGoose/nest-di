@@ -2,6 +2,7 @@ package dev.hanginggoose.framework.core;
 
 import dev.hanginggoose.framework.annotations.Autowired;
 import dev.hanginggoose.framework.graph.DependencyGraph;
+import dev.hanginggoose.framework.interception.InterceptionProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,7 @@ public class DIContainer {
         logger.info("DI Container started successfully. Managed beans: {}", instances.size());
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getBean(Class<T> beanClass) {
         logger.debug("Requesting bean {}", beanClass.getSimpleName());
 
@@ -85,6 +87,7 @@ public class DIContainer {
                 .orElseThrow(() -> new NoSuchElementException("No bean found with name: " + beanName));
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T createBeanFromMethod(Class<T> beanClass) {
         BeanInfo beanInfo = beanInfos.get(beanClass);
         if (beanInfo == null) {
@@ -117,6 +120,7 @@ public class DIContainer {
 
             factoryMethod.setAccessible(true);
             T instance = (T) factoryMethod.invoke(configInstance, parameterValues);
+            instance = InterceptionProxyFactory.createProxy(instance);
 
             if (instance == null) {
                 throw new IllegalStateException("Factory method " + factoryMethod.getName() +
@@ -139,6 +143,7 @@ public class DIContainer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T createInstance(Class<T> componentClass) {
         logger.debug("Creating instance of {}", componentClass.getSimpleName());
 
@@ -179,6 +184,7 @@ public class DIContainer {
 
             constructor.setAccessible(true);
             T instance = (T) constructor.newInstance(parameterValues);
+            instance = InterceptionProxyFactory.createProxy(instance);
 
             logger.info("Successfully created instance of {}", componentClass.getSimpleName());
             return instance;
