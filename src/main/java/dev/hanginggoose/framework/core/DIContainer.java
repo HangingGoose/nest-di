@@ -5,6 +5,7 @@ import dev.hanginggoose.framework.graph.DependencyGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -190,6 +191,14 @@ public class DIContainer {
 
     public Map<Class<?>, Object> getAllBeans() {
         return Collections.unmodifiableMap(instances);
+    }
+
+    public Map<Class<?>, Object> getBeansWithAnnotation(Class<? extends Annotation> annotation) {
+        Map<Class<?>, Object> result = new HashMap<>();
+        instances.keySet().stream().filter(c -> c.isAnnotationPresent(annotation))
+                .forEach(c -> result.put(c, instances.get(c)));
+
+        return Collections.unmodifiableMap(result);
     }
 
     public Map<String, Object> getNamedBeans() {
