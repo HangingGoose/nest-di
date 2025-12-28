@@ -1,1 +1,1 @@
-rootProject.name = "jvm-di-container"
+rootProject.name = "nest-di"
