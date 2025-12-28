@@ -36,6 +36,10 @@ tasks.compileJava {
     options.compilerArgs.add("-parameters")
 }
 
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
 tasks.jar {
     manifest {
         attributes(
