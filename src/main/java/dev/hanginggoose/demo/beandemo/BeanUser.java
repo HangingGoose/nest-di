@@ -1,4 +1,4 @@
-package dev.hanginggoose.demo.components;
+package dev.hanginggoose.demo.beandemo;
 
 import dev.hanginggoose.framework.annotations.Component;
 

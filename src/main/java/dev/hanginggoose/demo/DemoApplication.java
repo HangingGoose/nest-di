@@ -1,7 +1,6 @@
 package dev.hanginggoose.demo;
 
-import dev.hanginggoose.demo.components.BeanUser;
-import dev.hanginggoose.demo.components.InterceptedController;
+import dev.hanginggoose.demo.beandemo.BeanUser;
 import dev.hanginggoose.framework.core.ControllerDispatcher;
 import dev.hanginggoose.framework.core.DIContainer;
 import dev.hanginggoose.framework.core.DIContainerFactory;
@@ -25,19 +24,8 @@ public class DemoApplication {
             ControllerDispatcher dispatcher = new ControllerDispatcher(container);
             dispatcher.startConsole();
 
-            String greeting = (String) container.getBean("customGreeting");
-            logger.info("Custom greeting bean: {}", greeting);
-
-            Integer answer = container.getBean(Integer.class);
-            logger.info("Custom answer bean: {}", answer);
-
             BeanUser beanUser = container.getBean(BeanUser.class);
             logger.info("BeanUser says: {}", beanUser.useBeans());
-
-            InterceptedController interceptedController = container.getBean(InterceptedController.class);
-            logger.info("InterceptedController result: {}",
-                    interceptedController.interceptedMethod()
-            );
 
             logger.info("Managed beans ({}):", container.getAllBeans().size());
 
