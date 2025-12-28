@@ -2,7 +2,9 @@ package dev.hanginggoose.demo.infrastructure.product;
 
 import dev.hanginggoose.demo.domain.product.Product;
 import dev.hanginggoose.demo.domain.product.ProductRepository;
+import dev.hanginggoose.framework.annotations.Logged;
 import dev.hanginggoose.framework.annotations.Repository;
+import dev.hanginggoose.framework.annotations.Timed;
 
 import java.util.*;
 
@@ -26,7 +28,15 @@ public class InMemoryProductRepository implements ProductRepository {
     }
 
     @Override
+    @Logged
+    @Timed
     public Collection<Product> readProductsByBrand(UUID brandId) {
+        try {
+            // Simulate delay for demo
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         return products.values().stream().filter(p -> p.brandId().equals(brandId)).toList();
     }
 }
