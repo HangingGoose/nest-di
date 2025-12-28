@@ -4,8 +4,6 @@ import dev.hanginggoose.demo.application.ProductService;
 import dev.hanginggoose.demo.domain.product.Product;
 import dev.hanginggoose.framework.annotations.Controller;
 import dev.hanginggoose.framework.annotations.InputMapping;
-import dev.hanginggoose.framework.annotations.Logged;
-import dev.hanginggoose.framework.annotations.Timed;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -35,8 +33,6 @@ public class ProductController {
     }
 
     @InputMapping("brandProducts")
-    @Logged
-    @Timed
     public Collection<Product> getProductsByBrand(String brandId) {
         return service.getProductsByBrand(UUID.fromString(brandId));
     }

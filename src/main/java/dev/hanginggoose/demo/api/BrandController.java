@@ -4,7 +4,6 @@ import dev.hanginggoose.demo.application.BrandService;
 import dev.hanginggoose.demo.domain.brand.Brand;
 import dev.hanginggoose.framework.annotations.Controller;
 import dev.hanginggoose.framework.annotations.InputMapping;
-import dev.hanginggoose.framework.annotations.Logged;
 
 import java.util.UUID;
 
@@ -28,7 +27,6 @@ public class BrandController {
     }
 
     @InputMapping
-    @Logged
     public Brand getBrand(String id) {
         return service.getBrand(UUID.fromString(id));
     }
