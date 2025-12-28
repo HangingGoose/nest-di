@@ -1,4 +1,4 @@
-package dev.hanginggoose.framework.test;
+package dev.hanginggoose.framework.test.core;
 
 import dev.hanginggoose.framework.annotations.Bean;
 import dev.hanginggoose.framework.annotations.Component;
@@ -9,7 +9,6 @@ import dev.hanginggoose.framework.core.DIContainerFactory;
 import dev.hanginggoose.framework.graph.DependencyGraph;
 import dev.hanginggoose.framework.graph.DependencyGraphBuilder;
 import dev.hanginggoose.framework.scanning.ConfigurationScanner;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -20,43 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanConfigurationTest {
 
-    @Configuration
-    public static class TestConfig {
-
-        @Bean(name = "customGreeting")
-        public String greetingMessage() {
-            return "Hello, Dependency Injection!";
-        }
-
-        @Bean
-        public Integer answerToEverything() {
-            return 42;
-        }
-
-        @Bean
-        public StringBuilder stringBuilder(String customGreeting) {
-            return new StringBuilder(customGreeting);
-        }
-    }
-
-    @Configuration
-    public static class DependentConfig {
-
-        @Bean
-        public String dependentBean(StringBuilder builder) {
-            return builder.toString() + " with dependency";
-        }
-    }
-
-    private DIContainer container;
-
-    @BeforeEach
-    public void setup() {
-        container = DIContainerFactory.create("dev.hanginggoose.demo");
-    }
-
     @Test
     public void testBeanCreation() {
+        DIContainer container = DIContainerFactory.create("dev.hanginggoose.demo");
         container.start();
 
         String greeting = (String) container.getBean("customGreeting");
