@@ -124,6 +124,9 @@ public class DIContainer {
             }
 
             instances.put(beanClass, instance);
+            if (namedBeans.containsKey(beanInfo.getName())) {
+                throw new IllegalStateException("Bean name already exists: " + beanInfo.getName());
+            }
             namedBeans.put(beanInfo.getName(), instance);
 
             logger.info("Successfully created bean {} using factory method {}",
