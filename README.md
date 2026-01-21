@@ -3,7 +3,7 @@
 > Inspired by Spring Framework
 ---
 
-## Auteur
+## Author
 **Name:** HangingGoose
 **Project:** Nest DI (v1.0.0)
 
