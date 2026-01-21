@@ -82,14 +82,6 @@ public class HelloController {
 
 ---
 
-## Commands
-
-| Task          | Command           |
-|---------------|-------------------|
-| **Compile**   | `./gradlew build` |
-| **Run demo**  | `./gradlew run`   |
-| **Run tests** | `./gradlew test`  |
-
 > Requirements: Java 21+ and Gradle 8+
 
 ---

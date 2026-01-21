@@ -5,7 +5,6 @@ import dev.hanginggoose.nestdi.framework.annotations.Component;
 import dev.hanginggoose.nestdi.framework.annotations.Configuration;
 import dev.hanginggoose.nestdi.framework.core.BeanInfo;
 import dev.hanginggoose.nestdi.framework.core.DIContainer;
-import dev.hanginggoose.nestdi.framework.core.DIContainerFactory;
 import dev.hanginggoose.nestdi.framework.graph.DependencyGraph;
 import dev.hanginggoose.nestdi.framework.graph.DependencyGraphBuilder;
 import dev.hanginggoose.nestdi.framework.scanning.ConfigurationScanner;
@@ -18,20 +17,6 @@ import static dev.hanginggoose.nestdi.framework.core.DIContainerFactory.instanti
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanConfigurationTest {
-
-    @Test
-    public void testBeanCreation() {
-        DIContainer container = DIContainerFactory.create("dev.hanginggoose.nestdi.demo");
-        container.start();
-
-        String greeting = (String) container.getBean("customGreeting");
-        assertNotNull(greeting);
-        assertEquals("Hello, Dependency Injection!", greeting);
-
-        Integer magicNumber = container.getBean(Integer.class);
-        assertNotNull(magicNumber);
-        assertEquals(42, magicNumber);
-    }
 
     @Configuration
     public static class MixedConfig {
