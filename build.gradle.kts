@@ -11,10 +11,8 @@ repositories {
 }
 
 java {
-    withSourcesJar()
     withJavadocJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
 }
 
 dependencies {
@@ -44,61 +42,37 @@ publishing {
             from(components["java"])
 
             pom {
-                name.set("Nest DI")
-                description.set("Lightweight, annotation-based Dependency-Injection framework for Java")
-                url.set("https://github.com/HangingGoose/nest-di")
-
+                name = "Nest DI"
+                description = "Lightweight, annotation-based Dependency-Injection framework for Java"
+                url = "https://github.com/HangingGoose/nest-di"
                 licenses {
                     license {
-                        name.set("MIT")
+                        name = "MIT"
+                        url = "https://choosealicense.com/licenses/mit/"
                     }
                 }
-
                 developers {
                     developer {
-                        id.set("hanginggoose")
-                        name.set("HangingGoose")
+                        id = "hanginggoose"
+                        name = "HangingGoose"
+                        email = "hanginggoose@outlook.com"
                     }
                 }
-
                 scm {
                     connection.set("scm:git:git://github.com/HangingGoose/nest-di.git")
                     developerConnection.set("scm:git:ssh://github.com/HangingGoose/nest-di.git")
-                    url.set("https://github.com/HangingGoose/nest-di")
+                    url.set("https://github.com/HangingGoose/nest-di#")
                 }
             }
         }
     }
-
     repositories {
-        mavenLocal()
-
-        maven {
-            name = "OSSRH"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = project.findProperty("ossrhUsername") as String? ?: ""
-                password = project.findProperty("ossrhPassword") as String? ?: ""
-            }
-        }
-
-        // Alternative: GitHub Packages
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/yourusername/nest-di")
+            url = uri("https://maven.pkg.github.com/HangingGoose/nest-di")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-            }
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")            }
         }
-    }
-}
-
-tasks.jar {
-    manifest {
-        attributes(
-            "Implementation-Title" to "Nest DI",
-            "Implementation-Version" to version
-        )
     }
 }
