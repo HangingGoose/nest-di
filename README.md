@@ -1,10 +1,10 @@
 # Nest DI – README
-> Lightweight, annotation-based Dependency-Injection framework for Java – made as a project for **Programmeren 3 (2025-2026)**.
+> Lightweight, annotation-based Dependency-Injection framework for Java – made as a project for **Programming 3 (2025-2026)** at **Karel de Grote-Hogeschool**.  
 > Inspired by Spring Framework
 ---
 
-## Auteur
-**Name:** Matti Lehtinen (HangingGoose)
+## Author
+**Name:** HangingGoose  
 **Project:** Nest DI (v1.0.0)
 
 ---
@@ -81,14 +81,6 @@ public class HelloController {
 ```
 
 ---
-
-## Commands
-
-| Task          | Command           |
-|---------------|-------------------|
-| **Compile**   | `./gradlew build` |
-| **Run demo**  | `./gradlew run`   |
-| **Run tests** | `./gradlew test`  |
 
 > Requirements: Java 21+ and Gradle 8+
 

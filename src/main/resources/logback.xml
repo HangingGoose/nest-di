@@ -6,8 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="dev.hanginggoose.framework" level="INFO" />
-    <logger name="dev.hanginggoose.demo" level="INFO" />
+    <logger name="dev.hanginggoose.nestdi.framework" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
