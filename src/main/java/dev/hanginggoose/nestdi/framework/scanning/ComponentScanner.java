@@ -1,6 +1,6 @@
 package dev.hanginggoose.nestdi.framework.scanning;
 
-import dev.hanginggoose.nestdi.framework.annotations.*;
+import dev.hanginggoose.nestdi.framework.annotations.components.*;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

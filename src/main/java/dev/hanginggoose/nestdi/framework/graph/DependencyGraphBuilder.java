@@ -1,6 +1,6 @@
 package dev.hanginggoose.nestdi.framework.graph;
 
-import dev.hanginggoose.nestdi.framework.annotations.Configuration;
+import dev.hanginggoose.nestdi.framework.annotations.components.Configuration;
 import dev.hanginggoose.nestdi.framework.core.BeanInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

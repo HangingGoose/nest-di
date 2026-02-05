@@ -1,6 +1,6 @@
 package dev.hanginggoose.nestdi.framework.core;
 
-import dev.hanginggoose.nestdi.framework.annotations.Controller;
+import dev.hanginggoose.nestdi.framework.annotations.components.Controller;
 import dev.hanginggoose.nestdi.framework.annotations.InputMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +130,7 @@ public class ControllerDispatcher {
                 return UUID.fromString(arg);
             } else if (targetType.isEnum()) {
                 @SuppressWarnings("unchecked")
-                Enum<?> value = Enum.valueOf((Class<Enum>) targetType, arg.toUpperCase());
+                Enum<?> value = Enum.valueOf((Class<? extends Enum>) targetType, arg.toUpperCase());
                 return value;
             } else {
                 throw new IllegalArgumentException("Cannot convert to type: " + targetType.getName());

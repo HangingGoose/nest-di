@@ -1,7 +1,7 @@
 package dev.hanginggoose.nestdi.framework.test.interception;
 
-import dev.hanginggoose.nestdi.framework.annotations.Logged;
-import dev.hanginggoose.nestdi.framework.annotations.Timed;
+import dev.hanginggoose.nestdi.framework.annotations.interception.Logged;
+import dev.hanginggoose.nestdi.framework.annotations.interception.Timed;
 import dev.hanginggoose.nestdi.framework.interception.InterceptionProxyFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

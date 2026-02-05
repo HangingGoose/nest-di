@@ -29,7 +29,7 @@ Nest DI supports:
 - `@Service`
 
 ```java
-import dev.hanginggoose.nestdi.framework.annotations.Service;
+import dev.hanginggoose.nestdi.framework.annotations.components.Service;
 
 @Service
 public class HelloService {
@@ -42,7 +42,7 @@ public class HelloService {
 ### 2. Provide bean factories in `@Configuration`-annotated classes:
 ```java
 import dev.hanginggoose.nestdi.framework.annotations.Bean;
-import dev.hanginggoose.nestdi.framework.annotations.Configuration;
+import dev.hanginggoose.nestdi.framework.annotations.components.Configuration;
 
 @Configuration
 public class AppConfig {
@@ -56,9 +56,7 @@ public class AppConfig {
 
 ### 3. Create controller with console commands
 ```java
-import dev.hanginggoose.nestdi.framework.annotations.Autowired;
-import dev.hanginggoose.nestdi.framework.annotations.Controller;
-import dev.hanginggoose.nestdi.framework.annotations.InputMapping;
+import dev.hanginggoose.nestdi.framework.annotations.*;
 
 @Controller
 public class HelloController {

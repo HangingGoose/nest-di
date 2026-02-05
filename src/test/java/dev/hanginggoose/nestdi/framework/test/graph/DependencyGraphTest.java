@@ -1,9 +1,9 @@
 package dev.hanginggoose.nestdi.framework.test.graph;
 
-import dev.hanginggoose.nestdi.framework.annotations.Component;
-import dev.hanginggoose.nestdi.framework.annotations.Controller;
-import dev.hanginggoose.nestdi.framework.annotations.Repository;
-import dev.hanginggoose.nestdi.framework.annotations.Service;
+import dev.hanginggoose.nestdi.framework.annotations.components.Component;
+import dev.hanginggoose.nestdi.framework.annotations.components.Controller;
+import dev.hanginggoose.nestdi.framework.annotations.components.Repository;
+import dev.hanginggoose.nestdi.framework.annotations.components.Service;
 import dev.hanginggoose.nestdi.framework.graph.DependencyGraph;
 import dev.hanginggoose.nestdi.framework.graph.DependencyGraphBuilder;
 import org.junit.jupiter.api.Test;

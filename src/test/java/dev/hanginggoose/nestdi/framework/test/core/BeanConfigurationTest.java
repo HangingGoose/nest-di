@@ -1,8 +1,8 @@
 package dev.hanginggoose.nestdi.framework.test.core;
 
 import dev.hanginggoose.nestdi.framework.annotations.Bean;
-import dev.hanginggoose.nestdi.framework.annotations.Component;
-import dev.hanginggoose.nestdi.framework.annotations.Configuration;
+import dev.hanginggoose.nestdi.framework.annotations.components.Component;
+import dev.hanginggoose.nestdi.framework.annotations.components.Configuration;
 import dev.hanginggoose.nestdi.framework.core.BeanInfo;
 import dev.hanginggoose.nestdi.framework.core.DIContainer;
 import dev.hanginggoose.nestdi.framework.graph.DependencyGraph;
